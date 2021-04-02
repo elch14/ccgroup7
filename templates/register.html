@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+ <h2>Sign Up </h2>
+ <br>
+
+
+
+</br>
+  <form id="signup" action="{{ url_for('signup')}}" method="post">
+    Username :  <input type="text" id="username" name="username" />
+<br>
+
+</br>
+    Password : <input type="password" id="password" name="password" />
+    Confirm Password: <input type="password" id="con_password" name="con_password" />
+ <br>
+
+</br>
+    <input type="submit" id="submit" text="submit" />
+  </form>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class=flashes>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+{% endblock content %}

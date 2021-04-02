@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+	<head> Home </head>
+	<form action = "{{ url_for('country', username=username) }}", method="POST">
+		<label>Country:</label>
+		<input name="Country">
+		<input type="submit">
+	</form>
+	<p><a href="{{ url_for('logout', username=username) }}">Logout</a></p>
+{% endblock content %}
