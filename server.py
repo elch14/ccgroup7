@@ -4,9 +4,6 @@ from flask_sqlalchemy import SQLAlchemy,sqlalchemy
 from flask_bcrypt import Bcrypt
 import json
 
-
-
-
 """
 aws server
 """
@@ -84,9 +81,18 @@ in users.
 def home(username):
     return render_template('home.html',username=username)
 
-
-
-
+@app.route("/home/<username>", methods=['POST','GET'])
+def country(username):
+    summary_url = covid_main_url + str('dayone/country/') + request.form["Country"]
+    resp = requests.get(summary_url)
+    if resp.ok:
+         summary_json = resp.json()
+    else:
+        print(resp.reasone)
+        
+    return jsonify(summary_json), 200
+    return render_template('home.html',username=username)
+    
 @app.route("/home/<username>/countries")
 def home_countries(username):
     summary_url = covid_main_url + str('countries')
@@ -131,6 +137,7 @@ def home_country(username,name):
     checks if both username and hash password match thaose in database. If matches
     redirects user to home page. If it doesnt match it sends a login error.
     """
+    
 @app.route("/")
 @app.route("/login/", methods=["GET", "POST"])
 def login():
@@ -169,4 +176,5 @@ def logout(username):
 if __name__ == '__main__':
     # Loads the SSL certificate for implementing HTTPS
     # app.run(debug=True,ssl_context=('cert.pem', 'key.pem'))
-    app.run(debug=True,ssl_context=('cert.pem', 'key.pem'))
+    app.run(host="0.0.0.0",port=8080,ssl_context=('cert.pem', 'key.pem'))
+
