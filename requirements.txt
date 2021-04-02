@@ -1,0 +1,5 @@
+Flask
+requests
+flask_sqlalchemy
+flask_bcrypt
+
