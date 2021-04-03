@@ -78,6 +78,9 @@ Request API from https://api.covid19api.com/dayone/country/<name>
 Run the project
 ----------------
 Setup and activate your virtual enviornment
+.....
 install requirements pip install -r requirements.txt
+.....
 run server python server.py
+.....
 Create user and password on the main page. 
