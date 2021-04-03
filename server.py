@@ -1,12 +1,13 @@
+"""
+Import
+""" 
 from flask import Flask,render_template, url_for, flash, redirect, request,session,make_response, jsonify, json
 import requests
 from flask_sqlalchemy import SQLAlchemy,sqlalchemy
 from flask_bcrypt import Bcrypt
 import json
+import datetime
 
-"""
-aws server
-"""
 
 app = Flask(__name__)
 #secret key required for session, 
@@ -17,8 +18,28 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+"""
+Covid API Request
+"""
+
 covid_main_url = 'https://api.covid19api.com/'
 
+now = datetime.datetime.now().strftime("%Y-%m-%d")
+
+"""
+List of Countries
+"""
+country_response = requests.get('https://api.covid19api.com/countries')
+
+Country_List = []
+for x in country_response.json():
+    Country_List.append((x['Country']))
+    Country_List.append((x['Slug']))
+
+
+"""
+Create SQL Database
+"""
 
 class User(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
@@ -81,18 +102,37 @@ in users.
 def home(username):
     return render_template('home.html',username=username)
 
+"""
+Returns all live cases by case type for a country after a given date. These records are pulled every 10 minutes and are ungrouped. Country must be the slug from /countries or /summary. Cases must be one of: confirmed, recovered, deaths
+"""
+
 @app.route("/home/<username>", methods=['POST','GET'])
 def country(username):
-    summary_url = covid_main_url + str('dayone/country/') + request.form["Country"]
+    summary_url = covid_main_url + str('live/country/') + request.form["Country"] +str('/status/confirmed/date/') + request.form["StartDate"] 
     resp = requests.get(summary_url)
-    if resp.ok:
+    
+    if not (request.form["Country"] and request.form["StartDate"] ):
+        return str("Both country name and date need to be fill"), 404
+    elif request.form["Country"] not in Country_List:
+        return str('Error: ') + request.form["Country"] + str(' Not Found! Please see countries name on sidebar'), 404 
+    elif request.form["StartDate"] > now:
+        return str('Error: ') + request.form["StartDate"] + str(' cannot be greater than today date ') + now, 404
+    elif resp.ok:
          summary_json = resp.json()
     else:
-        print(resp.reasone)
-        
-    return jsonify(summary_json), 200
-    return render_template('home.html',username=username)
+        #print(resp.reasone)
+        #print('Please see list of countries on sidebar')
+        return str('Error: '), 404
+    #jsonify({'error':'Country not found! Please see sidebar'}), 404 
+              
     
+    return jsonify(summary_json), 200
+    #return render_template('home.html',username=username)
+    
+"""
+Returns all the available countries and provinces, as well as the country slug for per country requests.
+"""
+
 @app.route("/home/<username>/countries")
 def home_countries(username):
     summary_url = covid_main_url + str('countries')
@@ -104,7 +144,11 @@ def home_countries(username):
         print(resp.reasone)
     
     return jsonify(summary_json), 200
-    return render_template('home.html',username=username)
+    #return render_template('home.html',username=username)
+    
+"""
+A summary of new and total cases per country updated daily.
+"""
 
 @app.route("/home/<username>/summary")
 def home_summary(username):
@@ -117,19 +161,9 @@ def home_summary(username):
         print(resp.reasone)
     
     return jsonify(summary_json), 200
-    return render_template('home.html',username=username)
+    #return render_template('home.html',username=username)
 
 
-@app.route("/home/<username>/country/<name>", methods=['GET'])
-def home_country(username,name):
-    summary_url = covid_main_url + str('dayone/country/') + name
-    resp = requests.get(summary_url)
-    if resp.ok:
-         summary_json = resp.json()
-    else:
-        print(resp.reasone)
-    return jsonify(summary_json), 200
-    return render_template('home.html',username=username)
 
     """
     Uses get request to allow users to login default as soon as enters the webpage.
@@ -176,5 +210,4 @@ def logout(username):
 if __name__ == '__main__':
     # Loads the SSL certificate for implementing HTTPS
     # app.run(debug=True,ssl_context=('cert.pem', 'key.pem'))
-    app.run(host="0.0.0.0",port=8080,ssl_context=('cert.pem', 'key.pem'))
-
+    app.run(debug=True,ssl_context=('cert.pem', 'key.pem'))
