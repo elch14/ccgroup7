@@ -127,7 +127,7 @@ def country(username):
               
     
     return jsonify(summary_json), 200
-    #return render_template('home.html',username=username)
+    return render_template('home.html',username=username)
     
 """
 Returns all the available countries and provinces, as well as the country slug for per country requests.
@@ -144,7 +144,7 @@ def home_countries(username):
         print(resp.reasone)
     
     return jsonify(summary_json), 200
-    #return render_template('home.html',username=username)
+    return render_template('home.html',username=username)
     
 """
 A summary of new and total cases per country updated daily.
@@ -161,7 +161,7 @@ def home_summary(username):
         print(resp.reasone)
     
     return jsonify(summary_json), 200
-    #return render_template('home.html',username=username)
+    return render_template('home.html',username=username)
 
 
 
