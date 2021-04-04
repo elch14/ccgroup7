@@ -11,6 +11,9 @@ API Base: https://covid19-qm-grp7.herokuapp.com/
 -------------
 Summary Data
 ------------
+A summary of new and total cases per country updated daily.
+
+
 
 Get summary
 
@@ -31,6 +34,9 @@ Get summary
 --------------
 Countries Name
 --------------
+Returns all the available countries and provinces, as well as the country slug for per country requests.
+
+
 Get countries
 
  {
@@ -52,10 +58,12 @@ Get countries
 ---------------------------
 Individual Countries Cases
 ---------------------------
+Returns all live cases by case type for a country after a given date. These records are pulled every 10 minutes and are ungrouped. Country must be the slug from /countries or /summary. Cases must be one of: confirmed, recovered, deaths
 
-Input country string name into Country:<name> on main page.
 
-Request API from https://api.covid19api.com/dayone/country/<name>
+Request API from https://api.covid19api.com/live/country/{country-name}/status/confirmed/date/{date}
+{country-name} = United Kingdom
+{date} = 2020-01-31
 
 {
     "Active": 2, 
