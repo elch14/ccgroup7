@@ -6,7 +6,7 @@ An API and JSON list that contains countries covid cases.
 Using the API
 -------------
 
-API Base: https://127.0.0.1:5000/
+API Base: https://covid19-qm-grp7.herokuapp.com/
 
 -------------
 Summary Data
