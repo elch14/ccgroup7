@@ -5,8 +5,7 @@ An API and JSON list that contains countries covid cases.
 -------------
 Using the API
 -------------
-
-API Base: https://covid19-qm-grp7.herokuapp.com/
+Fetching API request from https://api.covid19api.com/ through our app https://covid19-qm-grp7.herokuapp.com/
 
 -------------
 Summary Data
@@ -14,7 +13,7 @@ Summary Data
 A summary of new and total cases per country updated daily.
 
 
-
+Request:
 Get summary
 
  {
@@ -36,7 +35,7 @@ Countries Name
 --------------
 Returns all the available countries and provinces, as well as the country slug for per country requests.
 
-
+Request: 
 Get countries
 
  {
